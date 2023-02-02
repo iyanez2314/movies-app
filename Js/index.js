@@ -1,17 +1,17 @@
 const BASE_URL = "http://localhost:3000/movies";
-// const buttonElem = document.querySelector(".submit-btn");
-// const movieTitleElem = document.querySelector("#movie-title");
-// const movieRatingElem = document.querySelector("#movie-rating");
-// const movieContent = document.querySelector("#content");
-// const myCard = document.querySelector("#myCard");
-// const noItemsElem = document.querySelector(".no-items");
-// const ratingValue = document.querySelector("#rating");
-// const addToListBtn = document.querySelector(".addToList");
-
+const buttonElem = document.querySelector(".submit-btn");
+const movieTitleElem = document.querySelector("#movie-title");
+const movieRatingElem = document.querySelector("#movie-rating");
+const movieContent = document.querySelector("#content");
+// console.log(document.querySelector("#list-of-movies"));
+// const elementCreated = document.createElement("p");
+// elementCreated.textContent = "someting";
+// document.querySelector("#list-of-movies").appendChild(elementCreated);
 class MovieCard {
-  constructor(data, poster) {
+  constructor(data) {
+    this.data = data;
     this.id = data?.id;
-    this.img = data?.image || poster;
+    this.img = data?.poster_path;
     this.title = data?.title;
     this.vote_average = data?.vote_average;
     this.overview = data?.overview;
@@ -29,16 +29,20 @@ class MovieCard {
     })
       .then((response) => response.json(response))
       .then((data) => {
-        movieData = data;
-        document.querySelector("#myCard").remove();
-        this.displayMovieData(movieData);
+        movieData.push(...data);
+        console.log(movieData);
+        movieData.map((movie) => {
+          let newMovieCard = new MovieCard(movie);
+          console.log(newMovieCard.element);
+          document
+            .querySelector("#list-of-movies")
+            .append(newMovieCard.element);
+        });
       });
   }
-  displayMovieData(movieData) {
+  displayMovieData(movie) {
     let html = ``;
-    movieData.forEach((movie) => {
-      console.log(movie.id);
-      html += `
+    html += `
         <div id="myCard" class="d-flex justify-content-evenly m-5 p-5 w-100" data-movie="${movie.id}">
           <div class="d-flex justify-content-center">
             <img
@@ -58,41 +62,48 @@ class MovieCard {
               <span  class="fa fa-star"></span>
             </div>
             <p id="movie-overview">${movie.overview}</p>
-              <button class="addToList" type="button">Add To List</button>
+              <button class="addToList" type="button">Edit content</button>
           </div>
         </div>
       `;
-    });
-    document.querySelector("#content").insertAdjacentHTML("beforeend", html);
+
+    document
+      .querySelector("#list-of-movies")
+      .insertAdjacentHTML("afterend", html);
   }
   render() {
     // remove #myCard from the DOM
+
     document.querySelector("#myCard").remove();
     let html = `
-    <div id="myCard" class="d-flex justify-content-evenly m-5 p-5 w-100" data-movie="${this.id}">
-      <div class="d-flex justify-content-center">
-        <img
-          id="movie-image"
-          src="http://image.tmdb.org/t/p/w500/${this.img}"
-        />
-      </div>
-      <div class="d-flex flex-column justify-content-center align-items-center m-5 p-5 w-50">
-        <h1 id="movie-title">${this.title}</h1>
-        <p id="movie-average">Vote Average ${this.vote_average}</p>
-        <h4>Ratings</h4>
-        <div class="d-flex justify-content-center flex-row m-4">
-          <span  class="fa fa-star checked"></span>
-          <span class="fa fa-star checked"></span>
-          <span  class="fa fa-star"></span>
-          <span  class="fa fa-star"></span>
-          <span  class="fa fa-star"></span>
+      <div  id="myCard" class="d-flex justify-content-evenly m-5 p-5 w-100" data-movie="${
+        this.id
+      }">
+        <div class="d-flex justify-content-center">
+          <img
+            id="movie-image"
+            src="http://image.tmdb.org/t/p/w500/${this.img}"
+          />
         </div>
-        <p id="movie-overview">${this.overview}</p>
-          <button class="addToList" type="button">Add To List</button>
+        <div class="d-flex flex-column justify-content-center align-items-center m-5 p-5 w-50">
+          <h1 id="movie-title">${
+            this.title === "undefined" ? "Search up a movie!" : this.title
+          }</h1>
+          <p id="movie-average">Vote Average ${this.vote_average}</p>
+          <h4>Ratings</h4>
+          <div class="d-flex justify-content-center flex-row m-4">
+            <span  class="fa fa-star checked"></span>
+            <span class="fa fa-star checked"></span>
+            <span  class="fa fa-star"></span>
+            <span  class="fa fa-star"></span>
+            <span  class="fa fa-star"></span>
+          </div>
+          <p id="movie-overview">${this.overview}</p>
+            <button class="addToList" type="button">Add To List</button>
+        </div>
       </div>
-    </div>
-    `;
-    document.querySelector("#content").insertAdjacentHTML("beforeend", html);
+      `;
+    document.querySelector("#content").insertAdjacentHTML("afterend", html);
     let element = document.querySelector(`[data-movie="${this.id}"]`);
     return element;
   }
@@ -102,7 +113,6 @@ class MovieCard {
     this.button.addEventListener("click", this.handleButtonClick.bind(this));
   }
   handleButtonClick() {
-    // TODO: add button listener
     const addedMovie = {
       id: `${this.id}`,
       title: `${this.title}`,
@@ -125,6 +135,7 @@ class MovieCard {
       .then((data) => console.log(data))
       .catch((err) => console.log(err));
   }
+
   delete() {
     this.button.removeEventListener("click", this.handleButtonClick);
     this.element.remove();
@@ -132,37 +143,15 @@ class MovieCard {
 }
 
 window.addEventListener("load", () => {
-  const newCard = new MovieCard();
-  newCard.pageLoadRender();
+  fetch(BASE_URL)
+    .then((response) => response.json(response))
+    .then((movies) => {
+      movies.forEach((movie) => {
+        const newCard = new MovieCard(movie);
+        newCard.displayMovieData(movie);
+      });
+    });
 });
-
-// (function () {
-//   let currentIndex = 0;
-//   let movieData = [];
-
-//   fetch(BASE_URL)
-//     .then((response) => response.json())
-//     .then((data) => {
-//       movieData = data;
-//       displayMovie(currentIndex);
-//     });
-
-//   function displayMovie(currentIndex) {
-//     if (!movieData || !movieData.length) {
-//       console.error("No movie data found");
-//       return;
-//     }
-
-//     if (!currentIndex || currentIndex < 0 || currentIndex >= movieData.length) {
-//       console.error("Invalid currentIndex value");
-//       return;
-//     }
-
-//     const movie = movieData[currentIndex];
-//     let movieCard = new MovieCard(movie, null);
-//     return movieCard;
-//   }
-// })();
 
 function testPost(e) {
   e.preventDefault();
@@ -173,9 +162,11 @@ function testPost(e) {
   fetch(imagePhotoUrl)
     .then((res) => res.json(res))
     .then((data) => {
-      let movie = new MovieCard(data.results[0], data.results[0].poster_path);
+      let movie = new MovieCard(data.results[0]);
     })
     .catch((err) => console.log(err));
 }
+
+function displayMovies(movies) {}
 
 buttonElem.addEventListener("click", testPost);
