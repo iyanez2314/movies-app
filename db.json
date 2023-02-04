@@ -1,0 +1,25 @@
+{
+  "movies": [
+    {
+      "id": "12133",
+      "title": "Step Brothers",
+      "vote_average": "6.6",
+      "overview": "Brennan Huff and Dale Doback might be grown men. But that doesn't stop them from living at home and turning into jealous, competitive stepbrothers when their single parents marry. Brennan's constant competition with Dale strains his mom's marriage to Dale's dad, leaving everyone to wonder whether they'll ever see eye to eye.",
+      "image": "http://image.tmdb.org/t/p/w500/jV0eDViuTRf9cmj4H0JNvbvaNbR.jpg"
+    },
+    {
+      "id": "646385",
+      "title": "Scream",
+      "vote_average": "6.7",
+      "overview": "Twenty-five years after a streak of brutal murders shocked the quiet town of Woodsboro, a new killer has donned the Ghostface mask and begins targeting a group of teenagers to resurrect secrets from the town’s deadly past.",
+      "image": "http://image.tmdb.org/t/p/w500/fFE6E9jRKaiy7LHxk4jH1jIWzyT.jpg"
+    },
+    {
+      "id": "8363",
+      "title": "Superbad",
+      "vote_average": "7.2",
+      "overview": "Two co-dependent high school seniors are forced to deal with separation anxiety after their plan to stage a booze-soaked party goes awry.",
+      "image": "http://image.tmdb.org/t/p/w500/ek8e8txUyUwd2BNqj6lFEerJfbq.jpg"
+    }
+  ]
+}

@@ -3,10 +3,6 @@ const buttonElem = document.querySelector(".submit-btn");
 const movieTitleElem = document.querySelector("#movie-title");
 const movieRatingElem = document.querySelector("#movie-rating");
 const movieContent = document.querySelector("#content");
-// console.log(document.querySelector("#list-of-movies"));
-// const elementCreated = document.createElement("p");
-// elementCreated.textContent = "someting";
-// document.querySelector("#list-of-movies").appendChild(elementCreated);
 class MovieCard {
   constructor(data) {
     this.data = data;
@@ -63,6 +59,7 @@ class MovieCard {
             </div>
             <p id="movie-overview">${movie.overview}</p>
               <button class="addToList" type="button">Edit content</button>
+              <button class="deleteMovie" type="button">Delete this movie</button>
           </div>
         </div>
       `;
@@ -70,38 +67,45 @@ class MovieCard {
     document
       .querySelector("#list-of-movies")
       .insertAdjacentHTML("afterend", html);
+    let deleteButton = document.querySelector(".deleteMovie");
+    deleteButton.addEventListener("click", () => {
+      this.deleteMovie();
+    });
   }
   render() {
     // remove #myCard from the DOM
-
     document.querySelector("#myCard").remove();
     let html = `
-      <div  id="myCard" class="d-flex justify-content-evenly m-5 p-5 w-100" data-movie="${
-        this.id
-      }">
-        <div class="d-flex justify-content-center">
-          <img
-            id="movie-image"
-            src="http://image.tmdb.org/t/p/w500/${this.img}"
-          />
-        </div>
-        <div class="d-flex flex-column justify-content-center align-items-center m-5 p-5 w-50">
-          <h1 id="movie-title">${
-            this.title === "undefined" ? "Search up a movie!" : this.title
-          }</h1>
-          <p id="movie-average">Vote Average ${this.vote_average}</p>
-          <h4>Ratings</h4>
-          <div class="d-flex justify-content-center flex-row m-4">
-            <span  class="fa fa-star checked"></span>
-            <span class="fa fa-star checked"></span>
-            <span  class="fa fa-star"></span>
-            <span  class="fa fa-star"></span>
-            <span  class="fa fa-star"></span>
+   
+        <div
+          id="myCard"
+          class="d-flex justify-content-evenly m-5 p-5 w-100"
+          data-movie="${this.id}"
+        >
+          <div class="d-flex justify-content-center">
+            <img id="movie-image" src="${this.img}" />
           </div>
-          <p id="movie-overview">${this.overview}</p>
-            <button class="addToList" type="button">Add To List</button>
+
+          <div class="d-flex flex-column justify-content-center align-items-center m-5 p-5 w-50">
+            <h1 id="movie-title">
+              ${this.title}
+            </h1>
+            <p id="movie-average">Vote Average ${this.vote_average}</p>
+            <h4>Ratings</h4>
+            <div class="d-flex justify-content-center flex-row m-4">
+              <span class="fa fa-star checked"></span>
+              <span class="fa fa-star checked"></span>
+              <span class="fa fa-star"></span>
+              <span class="fa fa-star"></span>
+              <span class="fa fa-star"></span>
+            </div>
+            <p id="movie-overview">${this.overview}</p>
+            <button class="addToList" type="button">
+              Add To List
+            </button>
+          </div>
         </div>
-      </div>
+
       `;
     document.querySelector("#content").insertAdjacentHTML("afterend", html);
     let element = document.querySelector(`[data-movie="${this.id}"]`);
@@ -120,7 +124,6 @@ class MovieCard {
       overview: `${this.overview}`,
       image: `http://image.tmdb.org/t/p/w500${this.img}`,
     };
-    console.log(addedMovie);
 
     const options = {
       method: "POST",
@@ -134,11 +137,27 @@ class MovieCard {
       .then((res) => res.json(res))
       .then((data) => console.log(data))
       .catch((err) => console.log(err));
+    this.pageLoadRender();
   }
 
   delete() {
     this.button.removeEventListener("click", this.handleButtonClick);
     this.element.remove();
+  }
+  deleteMovie() {
+    let movieId = this.id;
+    fetch(`${BASE_URL}/${movieId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json(response))
+      .then((data) => {
+        console.log(data);
+        this.element.remove();
+        this.render();
+      });
   }
 }
 
@@ -166,7 +185,4 @@ function testPost(e) {
     })
     .catch((err) => console.log(err));
 }
-
-function displayMovies(movies) {}
-
 buttonElem.addEventListener("click", testPost);
