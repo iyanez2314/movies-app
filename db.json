@@ -1,11 +1,16 @@
 {
   "movies": [
     {
-      "id": "646385",
-      "title": "Scream",
-      "vote_average": "6.7",
-      "overview": "Twenty-five years after a streak of brutal murders shocked the quiet town of Woodsboro, a new killer has donned the Ghostface mask and begins targeting a group of teenagers to resurrect secrets from the town’s deadly past.",
-      "image": "http://image.tmdb.org/t/p/w500/fFE6E9jRKaiy7LHxk4jH1jIWzyT.jpg"
+      "id": 8363,
+      "title": "Superbad",
+      "overview": "Two co-dependent high school seniors are forced to deal with separation anxiety after their plan to stage a booze-soaked party goes awry.",
+      "image": "http://image.tmdb.org/t/p/w500/ek8e8txUyUwd2BNqj6lFEerJfbq.jpg"
+    },
+    {
+      "id": 350,
+      "title": "The Devil Wears Prada",
+      "overview": "Andy moves to New York to work in the fashion industry. Her boss is extremely demanding, cruel and won't let her succeed if she doesn't fit into the high class elegant look of their magazine.",
+      "image": "http://image.tmdb.org/t/p/w500/8912AsVuS7Sj915apArUFbv6F9L.jpg"
     }
   ]
 }
