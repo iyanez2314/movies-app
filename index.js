@@ -67,7 +67,6 @@ class HeaderCard {
       .catch((err) => console.log(err));
   }
 }
-
 class MovieList {
   constructor(data) {
     this.data = data;
